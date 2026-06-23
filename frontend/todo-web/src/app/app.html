@@ -1,0 +1,113 @@
+<main class="page">
+  <section class="card">
+    <div class="header">
+      <div>
+        <p class="eyebrow">Azure Demo</p>
+        <h1>To Do List</h1>
+        <p class="subtitle">
+          Angular + ASP.NET Core API + Dapper + Azure SQL Database
+        </p>
+      </div>
+
+      <div class="status">
+        <span class="dot"></span>
+        Conectado a API
+      </div>
+    </div>
+
+    <form class="form" (ngSubmit)="guardarTodo()">
+      <div class="field">
+        <label>Título</label>
+        <input
+          type="text"
+          name="titulo"
+          [(ngModel)]="titulo"
+          placeholder="Ej. Probar sistema en el trabajo"
+          autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label>Descripción</label>
+        <textarea
+          name="descripcion"
+          [(ngModel)]="descripcion"
+          rows="3"
+          placeholder="Detalle opcional de la tarea"></textarea>
+      </div>
+
+      <button type="submit" [disabled]="cargando">
+        Agregar tarea
+      </button>
+    </form>
+
+    <div class="messages">
+      @if (mensaje) {
+        <div class="message success">{{ mensaje }}</div>
+      }
+
+      @if (error) {
+        <div class="message error">{{ error }}</div>
+      }
+    </div>
+
+    <div class="toolbar">
+      <input
+        type="text"
+        [(ngModel)]="textoBuscar"
+        name="textoBuscar"
+        placeholder="Buscar tarea..."
+        (keyup.enter)="consultarTodos()">
+
+      <button type="button" class="secondary" (click)="consultarTodos()">
+        Buscar
+      </button>
+
+      <button type="button" class="ghost" (click)="limpiarBusqueda()">
+        Limpiar
+      </button>
+    </div>
+
+    @if (cargando) {
+      <p class="loading">Cargando información...</p>
+    }
+
+    <section class="list">
+      @if (tareas.length === 0 && !cargando) {
+        <div class="empty">
+          No hay tareas registradas.
+        </div>
+      }
+
+      @for (tarea of tareas; track tarea.id) {
+        <article class="todo" [ngClass]="{ completed: tarea.completada }">
+          <div class="todo-main">
+            <button
+              type="button"
+              class="check"
+              [ngClass]="{ checked: tarea.completada }"
+              (click)="cambiarEstado(tarea)">
+              {{ tarea.completada ? '✓' : '' }}
+            </button>
+
+            <div>
+              <h2>{{ tarea.titulo }}</h2>
+              @if (tarea.descripcion) {
+                <p>{{ tarea.descripcion }}</p>
+              }
+              <small>
+                Creada: {{ tarea.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}
+              </small>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="delete"
+            (click)="borrarTodo(tarea)">
+            Eliminar
+          </button>
+        </article>
+      }
+    </section>
+  </section>
+</main>
