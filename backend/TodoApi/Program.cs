@@ -3,6 +3,9 @@ using TodoApi.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -13,10 +16,10 @@ builder.Services.AddScoped<TodoRepository>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("PermitirAngularLocal", policy =>
+    options.AddPolicy("PermitirFrontend", policy =>
     {
         policy
-            .WithOrigins("http://localhost:4200")
+            .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -27,9 +30,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
-
-app.UseCors("PermitirAngularLocal");
+app.UseCors("PermitirFrontend");
 
 app.UseAuthorization();
 
