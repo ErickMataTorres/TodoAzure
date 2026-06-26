@@ -7,7 +7,7 @@ import { TodoItem } from '../models/todo-item';
   providedIn: 'root'
 })
 export class TodoService {
-  private readonly apiUrl = 'https://localhost:7177/api/todos';
+  private apiUrl = 'https://todoapi-list.onrender.com/api/Todos';
 
   constructor(private http: HttpClient) {}
 
